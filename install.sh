@@ -139,7 +139,7 @@ nebula_menu() {
 }
 
 install_tunnel() {
-    nebula_menu "| 1  - IRAN \n| 2  - Kharej \n| 0  - Exit"
+    nebula_menu "| 1  - IRAN \n| 2  - Kharej \n| 3  - BBR \n| 0  - Exit"
 
     read -p "Enter option number: " setup
 
@@ -158,6 +158,12 @@ install_tunnel() {
             kharej_setup $i
         done
         ;;
+    3)
+    	echo "Running BBR script..."
+        curl -fsSL https://raw.githubusercontent.com/MrAminiDev/NetOptix/main/scripts/bbr.sh -o /tmp/bbr.sh
+	bash /tmp/bbr.sh
+	rm /tmp/bbr.sh
+	;;
     0)
         echo -e "${GREEN}Exiting program...${NC}"
         exit 0
