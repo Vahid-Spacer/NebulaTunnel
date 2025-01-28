@@ -14,6 +14,12 @@ To install, simply run the following command on your server
 ```
 bash <(curl -Ls https://raw.githubusercontent.com/MrAminiDev/NebulaTunnel/main/install.sh)
 ```
+<div align="center"><br>
+<p>Video tutorial for installation</p>
+</div>
+<div align="center"><img src="https://raw.githubusercontent.com/MrAminiDev/NebulaTunnel/main/tutorial.jpg" width="500"></div>
+<br>
+  
 ##  Support with Crypto 
 - TRX : `TLfVhyK6ihTuPNtFpuhULNuJaiKFLHxMFL`
 
