@@ -10,6 +10,11 @@
 ```
 bash <(curl -Ls https://raw.githubusercontent.com/MrAminiDev/NebulaTunnel/main/install.sh)
 ```
+<div align="center"><br>
+<p>آموزش تصویری نصب</p>
+</div>
+<div align="center"><img src="https://raw.githubusercontent.com/MrAminiDev/NebulaTunnel/main/tutorial.jpg" width="500"></div>
+<br>
 
 ##  حمایت از پروژه با ارز دیجیتال 
 - TRX : `TLfVhyK6ihTuPNtFpuhULNuJaiKFLHxMFL`
