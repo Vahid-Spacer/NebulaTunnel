@@ -17,7 +17,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/MrAminiDev/NebulaTunnel/main/i
 <div align="center"><br>
 <p>Video tutorial for installation</p>
 </div>
-<div align="center"><img src="https://raw.githubusercontent.com/MrAminiDev/NebulaTunnel/main/tutorial.jpg" width="500"></div>
+<div align="center"><a href="https://www.youtube.com/watch?v=pxI7-LUpmIQ"><img src="https://raw.githubusercontent.com/MrAminiDev/NebulaTunnel/main/tutorial.jpg" width="500"></a></div>
 <br>
   
 ##  Support with Crypto 
