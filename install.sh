@@ -280,7 +280,7 @@ unistall() {
 }
 
 loader() {
-    nebula_menu "| 1  - Config Tunnel \n| 2  - Unistall\n| 0  - Exit"
+    nebula_menu "| 1  - Config Tunnel \n| 2  - Unistall\n| 3  - Install BBR\n| 0  - Exit"
 
     read -p "Enter option number: " choice
     case $choice in
@@ -290,6 +290,12 @@ loader() {
     2)
         unistall
         ;;
+    3)
+    	echo "Running BBR script..."
+        curl -fsSL https://raw.githubusercontent.com/MrAminiDev/NetOptix/main/scripts/bbr.sh -o /tmp/bbr.sh
+	bash /tmp/bbr.sh
+	rm /tmp/bbr.sh
+	;;
     0)
         echo -e "${GREEN}Exiting program...${NC}"
         exit 0
