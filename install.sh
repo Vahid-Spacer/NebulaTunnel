@@ -81,12 +81,10 @@ EOL
     echo -e "${GREEN}obfs4 configuration file created at $obfs4_dir/obfs4.json${NC}"
 }
 
+
 start_obfs4() {
-    echo -e "${YELLOW}Starting obfs4 service on all incoming ports...${NC}"
-
-    # Start obfs4proxy to listen on all interfaces and ports
-    obfs4proxy -enable-server -listen 0.0.0.0:0 &
-
+    echo -e "${YELLOW}Starting obfs4 service...${NC}"
+    obfs4proxy -logLevel INFO -enableLogging &
     if [ $? -eq 0 ]; then
         echo -e "${GREEN}obfs4 service started successfully.${NC}"
     else
