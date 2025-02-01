@@ -82,8 +82,11 @@ EOL
 }
 
 start_obfs4() {
-    echo -e "${YELLOW}Starting obfs4 service...${NC}"
-    obfs4proxy -logLevel INFO -enableLogging -config /etc/obfs4/obfs4.json &
+    echo -e "${YELLOW}Starting obfs4 service on all incoming ports...${NC}"
+
+    # Start obfs4proxy to listen on all interfaces and ports
+    obfs4proxy -enable-server -listen 0.0.0.0:0 &
+
     if [ $? -eq 0 ]; then
         echo -e "${GREEN}obfs4 service started successfully.${NC}"
     else
