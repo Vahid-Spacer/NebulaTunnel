@@ -125,7 +125,7 @@ nebula_menu() {
     echo "||__| \__| |_______||______/   \______/  |_______/__/     \__\ |"
     echo "|                                                              |" 
     echo "+--------------------------------------------------------------+"    
-    echo -e "| Telegram Channel : ${MAGENTA}@AminiDev ${NC}| Version : ${GREEN} 1.0.0${NC} "
+    echo -e "| Telegram Channel : ${MAGENTA}@AminiDev ${NC}| Version : ${GREEN} 1.1.2${NC} "
     echo "+--------------------------------------------------------------+"  
     echo -e "|${GREEN}Server Country    |${NC} $SERVER_COUNTRY"
     echo -e "|${GREEN}Server IP         |${NC} $SERVER_IP"
