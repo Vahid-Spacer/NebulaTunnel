@@ -267,15 +267,52 @@ netplan_setup() {
 
 unistall() {
     echo $'\e[32mUninstalling Nebula in 3 seconds... \e[0m' && sleep 1 && echo $'\e[32m2... \e[0m' && sleep 1 && echo $'\e[32m1... \e[0m' && sleep 1 && {
-    rm /etc/netplan/mramini*.yaml
-    rm /root/connectors-*.sh
-    pkill screen
-    clear
-    echo 'Nebula Uninstalled :(';
-    systemctl stop ping-monitor.service
-    systemctl disable ping-monitor.service
-    rm /etc/systemd/system/ping-monitor.service
-    rm /root/ping_monitor.sh
+        # Stop all screen sessions
+        pkill screen
+        
+        # Find all tunnel0858 interfaces and delete them
+        for iface in $(ip link show | grep 'tunnel0858' | awk -F': ' '{print $2}' | cut -d'@' -f1); do
+            echo -e "${YELLOW}Removing interface $iface...${NC}"
+            ip link set $iface down
+            ip link delete $iface
+        done
+        
+        # Remove netplan configuration files
+        rm -f /etc/netplan/mramini*.yaml
+        netplan apply
+        
+        # Remove connector scripts
+        rm -f /root/connectors-*.sh
+        
+        # Stop and disable ping monitor service
+        systemctl stop ping-monitor.service 2>/dev/null
+        systemctl disable ping-monitor.service 2>/dev/null
+        rm -f /etc/systemd/system/ping-monitor.service
+        rm -f /root/ping_monitor.sh
+        
+        # Kill any remaining obfs4proxy processes
+        pkill obfs4proxy
+        
+        # Remove obfs4 configuration
+        rm -rf /etc/obfs4
+        
+        # Restart networking to apply changes
+        systemctl restart systemd-networkd
+        
+        # Verify all tunnel0858 interfaces are removed
+        remaining_tunnels=$(ip link show | grep 'tunnel0858' | wc -l)
+        if [ $remaining_tunnels -gt 0 ]; then
+            echo -e "${RED}Warning: $remaining_tunnels tunnel interfaces still remain.${NC}"
+            echo -e "${YELLOW}Attempting force removal with ip command...${NC}"
+            # Force remove any remaining tunnel interfaces
+            ip link show | grep 'tunnel0858' | awk -F': ' '{print $2}' | cut -d'@' -f1 | while read iface; do
+                ip link set $iface down
+                ip link delete $iface 2>/dev/null
+            done
+        fi
+        
+        clear
+        echo -e "${GREEN}Nebula Uninstalled successfully!${NC}"
     }
     loader
 }
