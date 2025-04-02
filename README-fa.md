@@ -13,7 +13,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/MrAminiDev/NebulaTunnel/main/i
 <div align="center"><br>
 <p>آموزش تصویری نصب</p>
 </div>
-<div align="center"><a href="https://www.youtube.com/watch?v=pxI7-LUpmIQ"><img src="https://raw.githubusercontent.com/MrAminiDev/NebulaTunnel/main/tutorial.jpg" width="500"></a></div>
+<div align="center"><a href="https://www.youtube.com/watch?v=bnbiKFaxoXM"><img src="https://raw.githubusercontent.com/MrAminiDev/NebulaTunnel/main/tutorial2.jpg" width="500"></a></div>
 <br>
 
 ##  حمایت از پروژه با ارز دیجیتال 
