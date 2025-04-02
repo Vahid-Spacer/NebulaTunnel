@@ -125,7 +125,7 @@ nebula_menu() {
     echo "||__| \__| |_______||______/   \______/  |_______/__/     \__\ |"
     echo "|                                                              |" 
     echo "+--------------------------------------------------------------+"    
-    echo -e "| Telegram Channel : ${MAGENTA}@AminiDev ${NC}| Version : ${GREEN} 1.1.2${NC} "
+    echo -e "| Telegram Channel : ${MAGENTA}@AminiDev ${NC}| Version : ${GREEN} 2.0.0 2${NC} "
     echo "+--------------------------------------------------------------+"  
     echo -e "|${GREEN}Server Country    |${NC} $SERVER_COUNTRY"
     echo -e "|${GREEN}Server IP         |${NC} $SERVER_IP"
@@ -318,7 +318,7 @@ unistall() {
 }
 
 loader() {
-    nebula_menu "| 1  - Config Tunnel \n| 2  - Unistall\n| 3  - Install BBR\n| 0  - Exit"
+    nebula_menu "| 1  - Config Tunnel \n| 2  - Unistall\n| 3  - Install BBR\n| 4  - Haproxy Menu\n| 0  - Exit"
 
     read -p "Enter option number: " choice
     case $choice in
@@ -333,6 +333,12 @@ loader() {
         curl -fsSL https://raw.githubusercontent.com/MrAminiDev/NetOptix/main/scripts/bbr.sh -o /tmp/bbr.sh
 	bash /tmp/bbr.sh
 	rm /tmp/bbr.sh
+	;;
+     4)
+    	echo "Running Haproxy Menu..."
+        curl -fsSL https://raw.githubusercontent.com/MrAminiDev/NebulaTunnel/main/haproxy.sh -o /tmp/haproxy.sh
+	bash /tmp/haproxy.sh
+	rm /tmp/haproxy.sh
 	;;
     0)
         echo -e "${GREEN}Exiting program...${NC}"
