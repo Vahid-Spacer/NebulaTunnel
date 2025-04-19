@@ -125,7 +125,7 @@ nebula_menu() {
     echo "||__| \__| |_______||______/   \______/  |_______/__/     \__\ |"
     echo "|                                                              |" 
     echo "+--------------------------------------------------------------+"    
-    echo -e "| Telegram Channel : ${MAGENTA}@AminiDev ${NC}| Version : ${GREEN} 2.0.0 ${NC} "
+    echo -e "| Telegram Channel : ${MAGENTA}@AminiDev ${NC}| Version : ${GREEN} 3.0.0 ${NC} "
     echo "+--------------------------------------------------------------+"  
     echo -e "|${GREEN}Server Country    |${NC} $SERVER_COUNTRY"
     echo -e "|${GREEN}Server IP         |${NC} $SERVER_IP"
@@ -317,8 +317,82 @@ unistall() {
     loader
 }
 
+manage_tunnels() {
+    clear
+    echo "+--------------------------------------------------------------+"
+    echo "|                    Tunnel Management                         |"
+    echo "+--------------------------------------------------------------+"
+    
+    # List all existing tunnels
+    echo -e "\n${GREEN}Existing Tunnels:${NC}"
+    ls /etc/netplan/mramini-*.yaml 2>/dev/null | while read -r file; do
+        tunnel_name=$(basename "$file" .yaml)
+        echo -e "${YELLOW}$tunnel_name${NC}"
+    done
+    
+    echo -e "\n${GREEN}Options:${NC}"
+    echo "1) Edit Tunnel"
+    echo "2) Delete Tunnel"
+    echo "0) Back to Main Menu"
+    
+    read -p "Enter your choice: " choice
+    
+    case $choice in
+        1)
+            read -p "Enter tunnel name to edit (e.g., mramini-1): " tunnel_name
+            if [ -f "/etc/netplan/$tunnel_name.yaml" ]; then
+                read -p "Enter new IRAN IP: " iran_ip
+                read -p "Enter new Kharej IP: " kharej_ip
+                read -p "Enter new IPv6 Local: " ipv6_local
+                
+                # Update the tunnel configuration
+                cat <<EOL > "/etc/netplan/$tunnel_name.yaml"
+network:
+  version: 2
+  tunnels:
+    tunnel0858-$(echo $tunnel_name | cut -d'-' -f2):
+      mode: sit
+      local: $iran_ip
+      remote: $kharej_ip
+      addresses:
+        - $ipv6_local::1/64
+EOL
+                netplan apply
+                echo -e "${GREEN}Tunnel updated successfully!${NC}"
+            else
+                echo -e "${RED}Tunnel not found!${NC}"
+            fi
+            ;;
+        2)
+            read -p "Enter tunnel name to delete (e.g., mramini-1): " tunnel_name
+            if [ -f "/etc/netplan/$tunnel_name.yaml" ]; then
+                # Stop the connector script if it exists
+                if [ -f "/root/connectors-$(echo $tunnel_name | cut -d'-' -f2).sh" ]; then
+                    pkill -f "connectors-$(echo $tunnel_name | cut -d'-' -f2).sh"
+                    rm "/root/connectors-$(echo $tunnel_name | cut -d'-' -f2).sh"
+                fi
+                
+                # Remove the tunnel configuration
+                rm "/etc/netplan/$tunnel_name.yaml"
+                netplan apply
+                echo -e "${GREEN}Tunnel deleted successfully!${NC}"
+            else
+                echo -e "${RED}Tunnel not found!${NC}"
+            fi
+            ;;
+        0)
+            return
+            ;;
+        *)
+            echo -e "${RED}Invalid choice!${NC}"
+            ;;
+    esac
+    
+    read -p "Press Enter to continue..."
+}
+
 loader() {
-    nebula_menu "| 1  - Config Tunnel \n| 2  - Unistall\n| 3  - Install BBR\n| 4  - Haproxy Menu\n| 0  - Exit"
+    nebula_menu "| 1  - Config Tunnel \n| 2  - Unistall\n| 3  - Install BBR\n| 4  - Haproxy Menu\n| 5  - Manage Tunnels\n| 0  - Exit"
 
     read -p "Enter option number: " choice
     case $choice in
@@ -329,17 +403,20 @@ loader() {
         unistall
         ;;
     3)
-    	echo "Running BBR script..."
+        echo "Running BBR script..."
         curl -fsSL https://raw.githubusercontent.com/MrAminiDev/NetOptix/main/scripts/bbr.sh -o /tmp/bbr.sh
-	bash /tmp/bbr.sh
-	rm /tmp/bbr.sh
-	;;
-     4)
-    	echo "Running Haproxy Menu..."
+        bash /tmp/bbr.sh
+        rm /tmp/bbr.sh
+        ;;
+    4)
+        echo "Running Haproxy Menu..."
         curl -fsSL https://raw.githubusercontent.com/MrAminiDev/NebulaTunnel/main/haproxy.sh -o /tmp/haproxy.sh
-	bash /tmp/haproxy.sh
-	rm /tmp/haproxy.sh
-	;;
+        bash /tmp/haproxy.sh
+        rm /tmp/haproxy.sh
+        ;;
+    5)
+        manage_tunnels
+        ;;
     0)
         echo -e "${GREEN}Exiting program...${NC}"
         exit 0
