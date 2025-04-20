@@ -125,7 +125,7 @@ nebula_menu() {
     echo "||__| \__| |_______||______/   \______/  |_______/__/     \__\ |"
     echo "|                                                              |" 
     echo "+--------------------------------------------------------------+"    
-    echo -e "| Telegram Channel : ${MAGENTA}@AminiDev ${NC}| Version : ${GREEN} 3.0.0 ${NC} "
+    echo -e "| Telegram Channel : ${MAGENTA}@AminiDev ${NC}| Version : ${GREEN} 4.0.0 ${NC} "
     echo "+--------------------------------------------------------------+"  
     echo -e "|${GREEN}Server Country    |${NC} $SERVER_COUNTRY"
     echo -e "|${GREEN}Server IP         |${NC} $SERVER_IP"
@@ -139,6 +139,19 @@ nebula_menu() {
     echo -e "\033[0m"
 }
 
+find_last_tunnel_number() {
+    local last_number=0
+    for file in /etc/netplan/mramini-*.yaml; do
+        if [ -f "$file" ]; then
+            local number=$(echo "$file" | grep -o 'mramini-[0-9]*' | cut -d'-' -f2)
+            if [ "$number" -gt "$last_number" ]; then
+                last_number=$number
+            fi
+        fi
+    done
+    echo $last_number
+}
+
 install_tunnel() {
     nebula_menu "| 1  - IRAN \n| 2  - Kharej \n| 0  - Exit"
 
@@ -146,15 +159,19 @@ install_tunnel() {
 
     read -p "How many servers: " server_count
 
+    # Find the last tunnel number
+    last_number=$(find_last_tunnel_number)
+    next_number=$((last_number + 1))
+
     case $setup in
     1)
-        for ((i=1;i<=server_count;i++))
+        for ((i=next_number;i<next_number+server_count;i++))
         do
             iran_setup $i
         done
         ;;  
     2)
-        for ((i=1;i<=server_count;i++))
+        for ((i=next_number;i<next_number+server_count;i++))
         do
             kharej_setup $i
         done
