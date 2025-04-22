@@ -125,7 +125,7 @@ nebula_menu() {
     echo "||__| \__| |_______||______/   \______/  |_______/__/     \__\ |"
     echo "|                                                              |" 
     echo "+--------------------------------------------------------------+"    
-    echo -e "| Telegram Channel : ${MAGENTA}@AminiDev ${NC}| Version : ${GREEN} 4.0.0 ${NC} "
+    echo -e "| Telegram Channel : ${MAGENTA}@AminiDev ${NC}| Version : ${GREEN} 6.0.0 ${NC} "
     echo "+--------------------------------------------------------------+"  
     echo -e "|${GREEN}Server Country    |${NC} $SERVER_COUNTRY"
     echo -e "|${GREEN}Server IP         |${NC} $SERVER_IP"
@@ -163,17 +163,32 @@ install_tunnel() {
     last_number=$(find_last_tunnel_number)
     next_number=$((last_number + 1))
 
+    echo -e "\n${GREEN}Choose IPv6 Local configuration:${NC}"
+    echo "1- Enter IPV6 Local manually (recommended)"
+    echo "2- Set IPV6 Local automatically"
+    read -p "Enter your choice: " ipv6_choice
+
     case $setup in
     1)
         for ((i=next_number;i<next_number+server_count;i++))
         do
-            iran_setup $i
+            if [ "$ipv6_choice" = "1" ]; then
+                iran_setup $i
+            else
+                auto_ipv6="fd25:2895:dc$(printf "%02d" $i)::1"
+                iran_setup_auto $i "$auto_ipv6"
+            fi
         done
         ;;  
     2)
         for ((i=next_number;i<next_number+server_count;i++))
         do
-            kharej_setup $i
+            if [ "$ipv6_choice" = "1" ]; then
+                kharej_setup $i
+            else
+                auto_ipv6="fd25:2895:dc$(printf "%02d" $i)::2"
+                kharej_setup_auto $i "$auto_ipv6"
+            fi
         done
         ;;
 
@@ -225,6 +240,43 @@ EOL
     echo -e "####################################"
 }
 
+iran_setup_auto() {
+    echo -e "${YELLOW}Setting up IRAN server $1${NC}"
+    
+    read -p "Enter IRAN IP    : " iran_ip
+    read -p "Enter Kharej IP  : " kharej_ip
+    
+    cat <<EOL > /etc/netplan/mramini-$1.yaml
+network:
+  version: 2
+  tunnels:
+    tunnel0858-$1:
+      mode: sit
+      local: $iran_ip
+      remote: $kharej_ip
+      addresses:
+        - $2/64
+EOL
+    netplan_setup
+    sudo netplan apply
+
+    start_obfs4
+
+    cat <<EOL > /root/connectors-$1.sh
+ping ${2%::1}::2
+EOL
+
+    chmod +x /root/connectors-$1.sh
+
+    screen -dmS connectors_session_$1 bash -c "/root/connectors-$1.sh"
+
+    echo "IRAN Server $1 setup complete."
+    echo -e "####################################"
+    echo -e "# Your IPv6 :                      #"
+    echo -e "#  $2                             #"
+    echo -e "####################################"
+}
+
 kharej_setup() {
     echo -e "${YELLOW}Setting up Kharej server $1${NC}"
     
@@ -260,6 +312,43 @@ EOL
     echo -e "####################################"
     echo -e "# Your IPv6 :                      #"
     echo -e "#  $ipv6_local::2                  #"
+    echo -e "####################################"
+}
+
+kharej_setup_auto() {
+    echo -e "${YELLOW}Setting up Kharej server $1${NC}"
+    
+    read -p "Enter IRAN IP    : " iran_ip
+    read -p "Enter Kharej IP  : " kharej_ip
+    
+    cat <<EOL > /etc/netplan/mramini-$1.yaml
+network:
+  version: 2
+  tunnels:
+    tunnel0858-$1:
+      mode: sit
+      local: $kharej_ip
+      remote: $iran_ip
+      addresses:
+        - $2/64
+EOL
+    netplan_setup
+    sudo netplan apply
+
+    start_obfs4
+
+    cat <<EOL > /root/connectors-$1.sh
+ping ${2%::2}::1
+EOL
+
+    chmod +x /root/connectors-$1.sh
+
+    screen -dmS connectors_session_$1 bash -c "/root/connectors-$1.sh"
+
+    echo "Kharej Server $1 setup complete."
+    echo -e "####################################"
+    echo -e "# Your IPv6 :                      #"
+    echo -e "#  $2                             #"
     echo -e "####################################"
 }
 
