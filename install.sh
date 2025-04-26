@@ -125,7 +125,7 @@ nebula_menu() {
     echo "||__| \__| |_______||______/   \______/  |_______/__/     \__\ |"
     echo "|                                                              |" 
     echo "+--------------------------------------------------------------+"    
-    echo -e "| Telegram Channel : ${MAGENTA}@AminiDev ${NC}| Version : ${GREEN} 5.0.0 ${NC} "
+    echo -e "| Telegram Channel : ${MAGENTA}@AminiDev ${NC}| Version : ${GREEN} 6.5.0 ${NC} "
     echo "+--------------------------------------------------------------+"  
     echo -e "|${GREEN}Server Country    |${NC} $SERVER_COUNTRY"
     echo -e "|${GREEN}Server IP         |${NC} $SERVER_IP"
@@ -157,19 +157,18 @@ install_tunnel() {
 
     read -p "Enter option number: " setup
 
-    read -p "How many servers: " server_count
-
-    # Find the last tunnel number
-    last_number=$(find_last_tunnel_number)
-    next_number=$((last_number + 1))
-
-    echo -e "\n${GREEN}Choose IPv6 Local configuration:${NC}"
-    echo "1- Enter IPV6 Local manually (recommended)"
-    echo "2- Set IPV6 Local automatically"
-    read -p "Enter your choice: " ipv6_choice
-
     case $setup in
     1)
+        read -p "How many servers: " server_count
+        # Find the last tunnel number
+        last_number=$(find_last_tunnel_number)
+        next_number=$((last_number + 1))
+
+        echo -e "\n${GREEN}Choose IPv6 Local configuration:${NC}"
+        echo "1- Enter IPV6 Local manually (recommended)"
+        echo "2- Set IPV6 Local automatically"
+        read -p "Enter your choice: " ipv6_choice
+
         for ((i=next_number;i<next_number+server_count;i++))
         do
             if [ "$ipv6_choice" = "1" ]; then
@@ -181,15 +180,25 @@ install_tunnel() {
         done
         ;;  
     2)
-        for ((i=next_number;i<next_number+server_count;i++))
-        do
-            if [ "$ipv6_choice" = "1" ]; then
+        echo -e "\n${GREEN}Choose IPv6 Local configuration:${NC}"
+        echo "1- Enter IPV6 Local manually (recommended)"
+        echo "2- Set IPV6 Local automatically"
+        read -p "Enter your choice: " ipv6_choice
+
+        if [ "$ipv6_choice" = "1" ]; then
+            read -p "How many servers: " server_count
+            # Find the last tunnel number
+            last_number=$(find_last_tunnel_number)
+            next_number=$((last_number + 1))
+            for ((i=next_number;i<next_number+server_count;i++))
+            do
                 kharej_setup $i
-            else
-                auto_ipv6="fd25:2895:dc$(printf "%02d" $i)::2"
-                kharej_setup_auto $i "$auto_ipv6"
-            fi
-        done
+            done
+        else
+            read -p "What is the Kharej server number? " kharej_number
+            auto_ipv6="fd25:2895:dc$(printf "%02d" $kharej_number)::2"
+            kharej_setup_auto $kharej_number "$auto_ipv6"
+        fi
         ;;
 
     0)
