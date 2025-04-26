@@ -126,7 +126,9 @@ nebula_menu() {
     echo "|                                                              |" 
     echo "+--------------------------------------------------------------+"    
     echo -e "| Telegram Channel : ${MAGENTA}@AminiDev ${NC}| Version : ${GREEN} 6.5.0 ${NC}| Sponsor : ${MAGENTA}T.me/VNodePro ${NC} "
-    echo "+--------------------------------------------------------------+"  
+    echo "+--------------------------------------------------------------------------------+"      
+    echo -e "|         Telegram Channel Sponsor  : ${MAGENTA}T.me/VNodePro ${NC} "
+    echo "+--------------------------------------------------------------------------------+"
     echo -e "|${GREEN}Server Country    |${NC} $SERVER_COUNTRY"
     echo -e "|${GREEN}Server IP         |${NC} $SERVER_IP"
     echo -e "|${GREEN}Server ISP        |${NC} $SERVER_ISP"
@@ -135,7 +137,7 @@ nebula_menu() {
     echo -e "|${YELLOW}Please choose an option:${NC}"
     echo "+--------------------------------------------------------------------------------+"
     echo -e $1
-    echo "+---------------------------------------------------------------------------------+"
+    echo "+--------------------------------------------------------------------------------+"
     echo -e "\033[0m"
 }
 
