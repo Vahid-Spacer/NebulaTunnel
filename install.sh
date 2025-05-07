@@ -38,7 +38,6 @@ install_obfs4() {
         fi
     fi
 }
-
 configure_obfs4() {
     local obfs4_dir="/etc/obfs4"
     local obfs4_cert="$obfs4_dir/obfs4_cert"
@@ -81,7 +80,6 @@ EOL
     echo -e "${GREEN}obfs4 configuration file created at $obfs4_dir/obfs4.json${NC}"
 }
 
-
 start_obfs4() {
     echo -e "${YELLOW}Starting obfs4 service...${NC}"
     obfs4proxy -logLevel INFO -enableLogging &
@@ -104,16 +102,12 @@ init() {
 
 nebula_menu() {
     clear
-
     # Get server IP
     SERVER_IP=$(hostname -I | awk '{print $1}')
-
     # Fetch server country using ip-api.com
     SERVER_COUNTRY=$(curl -sS "http://ip-api.com/json/$SERVER_IP" | jq -r '.country')
-
     # Fetch server isp using ip-api.com 
     SERVER_ISP=$(curl -sS "http://ip-api.com/json/$SERVER_IP" | jq -r '.isp')
-	
     nebula_core=$(check_core_status)
 
     echo "+--------------------------------------------------------------+"
@@ -125,7 +119,7 @@ nebula_menu() {
     echo "||__| \__| |_______||______/   \______/  |_______/__/     \__\ |"
     echo "|                                                              |" 
     echo "+--------------------------------------------------------------+"    
-    echo -e "| Telegram Channel : ${MAGENTA}@AminiDev ${NC}| Version : ${GREEN} 6.5.1 ${NC} "
+    echo -e "| Telegram Channel : ${MAGENTA}@AminiDev ${NC}| Version : ${GREEN} 6.5.2 ${NC} "
     echo "+--------------------------------------------------------------------------------+"      
     echo -e "|         Telegram Channel Sponsor  : ${GREEN}VNodePro ${NC} "
     echo "+--------------------------------------------------------------------------------+"
