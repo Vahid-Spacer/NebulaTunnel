@@ -38,6 +38,7 @@ install_obfs4() {
         fi
     fi
 }
+
 configure_obfs4() {
     local obfs4_dir="/etc/obfs4"
     local obfs4_cert="$obfs4_dir/obfs4_cert"
@@ -80,6 +81,7 @@ EOL
     echo -e "${GREEN}obfs4 configuration file created at $obfs4_dir/obfs4.json${NC}"
 }
 
+
 start_obfs4() {
     echo -e "${YELLOW}Starting obfs4 service...${NC}"
     obfs4proxy -logLevel INFO -enableLogging &
@@ -119,7 +121,7 @@ nebula_menu() {
     echo "||__| \__| |_______||______/   \______/  |_______/__/     \__\ |"
     echo "|                                                              |" 
     echo "+--------------------------------------------------------------+"    
-    echo -e "| Telegram Channel : ${MAGENTA}@AminiDev ${NC}| Version : ${GREEN} 6.5.2 ${NC} "
+    echo -e "| Telegram Channel : ${MAGENTA}@AminiDev ${NC}| Version : ${GREEN} 7.0.0 ${NC} "
     echo "+--------------------------------------------------------------------------------+"      
     echo -e "|         Telegram Channel Sponsor  : ${GREEN}VNodePro ${NC} "
     echo "+--------------------------------------------------------------------------------+"
@@ -148,52 +150,232 @@ find_last_tunnel_number() {
     echo $last_number
 }
 
+iran_setup_ipv4() {
+    echo -e "${YELLOW}Setting up IRAN server $1${NC}"
+    
+    read -p "Enter IRAN IP    : " iran_ip
+    read -p "Enter Kharej IP  : " kharej_ip
+    read -p "Enter IPv4 Local : " ipv4_local
+    
+    cat <<EOL > /etc/netplan/mramini-$1.yaml
+network:
+  version: 2
+  tunnels:
+    tunnel0858-$1:
+      mode: sit
+      local: $iran_ip
+      remote: $kharej_ip
+      addresses:
+        - $ipv4_local/24
+EOL
+    netplan_setup
+    sudo netplan apply
+
+    start_obfs4
+
+    cat <<EOL > /root/connectors-$1.sh
+ping ${ipv4_local%.*}.2
+EOL
+
+    chmod +x /root/connectors-$1.sh
+
+    screen -dmS connectors_session_$1 bash -c "/root/connectors-$1.sh"
+
+    # Unblock IPv4 local if blocked
+    iptables -C INPUT -s $ipv4_local -j DROP 2>/dev/null && iptables -D INPUT -s $ipv4_local -j DROP
+
+    echo "IRAN Server $1 setup complete."
+    echo -e "####################################"
+    echo -e "# Your IPv4 :                      #"
+    echo -e "#  $ipv4_local                     #"
+    echo -e "####################################"
+}
+
+kharej_setup_ipv4() {
+    echo -e "${YELLOW}Setting up Kharej server $1${NC}"
+    
+    read -p "Enter IRAN IP    : " iran_ip
+    read -p "Enter Kharej IP  : " kharej_ip
+    read -p "Enter IPv4 Local : " ipv4_local
+    
+    cat <<EOL > /etc/netplan/mramini-$1.yaml
+network:
+  version: 2
+  tunnels:
+    tunnel0858-$1:
+      mode: sit
+      local: $kharej_ip
+      remote: $iran_ip
+      addresses:
+        - $ipv4_local/24
+EOL
+    netplan_setup
+    sudo netplan apply
+
+    start_obfs4
+
+    cat <<EOL > /root/connectors-$1.sh
+ping ${ipv4_local%.*}.1
+EOL
+
+    chmod +x /root/connectors-$1.sh
+
+    screen -dmS connectors_session_$1 bash -c "/root/connectors-$1.sh"
+
+    # Unblock IPv4 local if blocked
+    iptables -C INPUT -s $ipv4_local -j DROP 2>/dev/null && iptables -D INPUT -s $ipv4_local -j DROP
+
+    echo "Kharej Server $1 setup complete."
+    echo -e "####################################"
+    echo -e "# Your IPv4 :                      #"
+    echo -e "#  $ipv4_local                     #"
+    echo -e "####################################"
+}
+
+iran_setup_auto_ipv4() {
+    echo -e "${YELLOW}Setting up IRAN server $1${NC}"
+    
+    read -p "Enter IRAN IP    : " iran_ip
+    read -p "Enter Kharej IP  : " kharej_ip
+    
+    cat <<EOL > /etc/netplan/mramini-$1.yaml
+network:
+  version: 2
+  tunnels:
+    tunnel0858-$1:
+      mode: sit
+      local: $iran_ip
+      remote: $kharej_ip
+      addresses:
+        - $2/24
+EOL
+    netplan_setup
+    sudo netplan apply
+
+    start_obfs4
+
+    cat <<EOL > /root/connectors-$1.sh
+ping ${2%.*}.2
+EOL
+
+    chmod +x /root/connectors-$1.sh
+
+    screen -dmS connectors_session_$1 bash -c "/root/connectors-$1.sh"
+
+    # Unblock IPv4 local if blocked
+    iptables -C INPUT -s $2 -j DROP 2>/dev/null && iptables -D INPUT -s $2 -j DROP
+
+    echo "IRAN Server $1 setup complete."
+    echo -e "####################################"
+    echo -e "# Your IPv4 :                      #"
+    echo -e "#  $2                             #"
+    echo -e "####################################"
+}
+
+kharej_setup_auto_ipv4() {
+    echo -e "${YELLOW}Setting up Kharej server $1${NC}"
+    
+    read -p "Enter IRAN IP    : " iran_ip
+    read -p "Enter Kharej IP  : " kharej_ip
+    
+    cat <<EOL > /etc/netplan/mramini-$1.yaml
+network:
+  version: 2
+  tunnels:
+    tunnel0858-$1:
+      mode: sit
+      local: $kharej_ip
+      remote: $iran_ip
+      addresses:
+        - $2/24
+EOL
+    netplan_setup
+    sudo netplan apply
+
+    start_obfs4
+
+    cat <<EOL > /root/connectors-$1.sh
+ping ${2%.*}.1
+EOL
+
+    chmod +x /root/connectors-$1.sh
+
+    screen -dmS connectors_session_$1 bash -c "/root/connectors-$1.sh"
+
+    # Unblock IPv4 local if blocked
+    iptables -C INPUT -s $2 -j DROP 2>/dev/null && iptables -D INPUT -s $2 -j DROP
+
+    echo "Kharej Server $1 setup complete."
+    echo -e "####################################"
+    echo -e "# Your IPv4 :                      #"
+    echo -e "#  $2                             #"
+    echo -e "####################################"
+}
+
 install_tunnel() {
-    nebula_menu "| 1  - IRAN \n| 2  - Kharej \n| 0  - Exit"
+    nebula_menu "| 1  - IRAN \n| 2  - Kharej \n| 3  - IRAN (IPv4 Local) \n| 4  - Kharej (IPv4 Local) \n| 0  - Exit"
 
     read -p "Enter option number: " setup
 
     case $setup in
-    1)
+    1|3)
         read -p "How many servers: " server_count
         # Find the last tunnel number
         last_number=$(find_last_tunnel_number)
         next_number=$((last_number + 1))
 
-        echo -e "\n${GREEN}Choose IPv6 Local configuration:${NC}"
-        echo "1- Enter IPV6 Local manually (recommended)"
-        echo "2- Set IPV6 Local automatically"
-        read -p "Enter your choice: " ipv6_choice
+        echo -e "\n${GREEN}Choose IP configuration:${NC}"
+        echo "1- Enter IP manually (recommended)"
+        echo "2- Set IP automatically"
+        read -p "Enter your choice: " ip_choice
 
         for ((i=next_number;i<next_number+server_count;i++))
         do
-            if [ "$ipv6_choice" = "1" ]; then
-                iran_setup $i
+            if [ "$ip_choice" = "1" ]; then
+                if [ "$setup" = "1" ]; then
+                    iran_setup $i
+                else
+                    iran_setup_ipv4 $i
+                fi
             else
-                auto_ipv6="fd25:2895:dc$(printf "%02d" $i)::1"
-                iran_setup_auto $i "$auto_ipv6"
+                if [ "$setup" = "1" ]; then
+                    auto_ipv6="fd25:2895:dc$(printf "%02d" $i)::1"
+                    iran_setup_auto $i "$auto_ipv6"
+                else
+                    auto_ipv4="10.0.$(printf "%d" $i).1"
+                    iran_setup_auto_ipv4 $i "$auto_ipv4"
+                fi
             fi
         done
         ;;  
-    2)
-        echo -e "\n${GREEN}Choose IPv6 Local configuration:${NC}"
-        echo "1- Enter IPV6 Local manually (recommended)"
-        echo "2- Set IPV6 Local automatically"
-        read -p "Enter your choice: " ipv6_choice
+    2|4)
+        echo -e "\n${GREEN}Choose IP configuration:${NC}"
+        echo "1- Enter IP manually (recommended)"
+        echo "2- Set IP automatically"
+        read -p "Enter your choice: " ip_choice
 
-        if [ "$ipv6_choice" = "1" ]; then
+        if [ "$ip_choice" = "1" ]; then
             read -p "How many servers: " server_count
             # Find the last tunnel number
             last_number=$(find_last_tunnel_number)
             next_number=$((last_number + 1))
             for ((i=next_number;i<next_number+server_count;i++))
             do
-                kharej_setup $i
+                if [ "$setup" = "2" ]; then
+                    kharej_setup $i
+                else
+                    kharej_setup_ipv4 $i
+                fi
             done
         else
-            read -p "What is the Kharej server number? " kharej_number
-            auto_ipv6="fd25:2895:dc$(printf "%02d" $kharej_number)::2"
-            kharej_setup_auto $kharej_number "$auto_ipv6"
+            read -p "What is the server number? " server_number
+            if [ "$setup" = "2" ]; then
+                auto_ipv6="fd25:2895:dc$(printf "%02d" $server_number)::2"
+                kharej_setup_auto $server_number "$auto_ipv6"
+            else
+                auto_ipv4="10.0.$(printf "%d" $server_number).2"
+                kharej_setup_auto_ipv4 $server_number "$auto_ipv4"
+            fi
         fi
         ;;
 
