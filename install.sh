@@ -84,7 +84,7 @@ EOL
 
 start_obfs4() {
     echo -e "${YELLOW}Starting obfs4 service...${NC}"
-    obfs4proxy -logLevel INFO -enableLogging &
+    obfs4proxy -logLevel INFO -enableLogging >/dev/null 2>&1 &
     if [ $? -eq 0 ]; then
         echo -e "${GREEN}obfs4 service started successfully.${NC}"
     else
@@ -121,7 +121,7 @@ nebula_menu() {
     echo "||__| \__| |_______||______/   \______/  |_______/__/     \__\ |"
     echo "|                                                              |" 
     echo "+--------------------------------------------------------------+"    
-    echo -e "| Telegram Channel : ${MAGENTA}@AminiDev ${NC}| Version : ${GREEN} 7.0.0 ${NC} "
+    echo -e "| Telegram Channel : ${MAGENTA}@AminiDev ${NC}| Version : ${GREEN} 7.1.0 ${NC} "
     echo "+--------------------------------------------------------------------------------+"      
     echo -e "|         Telegram Channel Sponsor  : ${GREEN}VNodePro ${NC} "
     echo "+--------------------------------------------------------------------------------+"
@@ -168,8 +168,11 @@ network:
       addresses:
         - $ipv4_local/24
 EOL
+    # Set strict permissions to avoid warnings
+    chmod 600 /etc/netplan/mramini-$1.yaml
+    
     netplan_setup
-    sudo netplan apply
+    sudo netplan apply 2>/dev/null
 
     start_obfs4
 
@@ -209,8 +212,11 @@ network:
       addresses:
         - $ipv4_local/24
 EOL
+    # Set strict permissions to avoid warnings
+    chmod 600 /etc/netplan/mramini-$1.yaml
+    
     netplan_setup
-    sudo netplan apply
+    sudo netplan apply 2>/dev/null
 
     start_obfs4
 
@@ -249,8 +255,11 @@ network:
       addresses:
         - $2/24
 EOL
+    # Set strict permissions to avoid warnings
+    chmod 600 /etc/netplan/mramini-$1.yaml
+    
     netplan_setup
-    sudo netplan apply
+    sudo netplan apply 2>/dev/null
 
     start_obfs4
 
@@ -289,8 +298,11 @@ network:
       addresses:
         - $2/24
 EOL
+    # Set strict permissions to avoid warnings
+    chmod 600 /etc/netplan/mramini-$1.yaml
+    
     netplan_setup
-    sudo netplan apply
+    sudo netplan apply 2>/dev/null
 
     start_obfs4
 
@@ -407,8 +419,11 @@ network:
       addresses:
         - $ipv6_local::1/64
 EOL
+    # Set strict permissions to avoid warnings
+    chmod 600 /etc/netplan/mramini-$1.yaml
+    
     netplan_setup
-    sudo netplan apply
+    sudo netplan apply 2>/dev/null
 
     start_obfs4
 
@@ -444,8 +459,11 @@ network:
       addresses:
         - $2/64
 EOL
+    # Set strict permissions to avoid warnings
+    chmod 600 /etc/netplan/mramini-$1.yaml
+    
     netplan_setup
-    sudo netplan apply
+    sudo netplan apply 2>/dev/null
 
     start_obfs4
 
@@ -482,8 +500,11 @@ network:
       addresses:
         - $ipv6_local::2/64
 EOL
+    # Set strict permissions to avoid warnings
+    chmod 600 /etc/netplan/mramini-$1.yaml
+    
     netplan_setup
-    sudo netplan apply
+    sudo netplan apply 2>/dev/null
 
     start_obfs4
 
@@ -519,8 +540,11 @@ network:
       addresses:
         - $2/64
 EOL
+    # Set strict permissions to avoid warnings
+    chmod 600 /etc/netplan/mramini-$1.yaml
+    
     netplan_setup
-    sudo netplan apply
+    sudo netplan apply 2>/dev/null
 
     start_obfs4
 
