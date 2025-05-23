@@ -6,9 +6,16 @@
 </div>
 <br><br>
 
-# What is NebulaTunnel?
-The Nebula tunnel script is an advanced tunneling solution featuring traffic obfuscation capabilities, powered by the robust OBFS4 tool. This script enables the creation of secure tunnels between one or multiple servers, utilizing modern protocols such as IPv6 and SIT to establish stable and secure connections. With its traffic obfuscation feature, the script makes it significantly harder for firewalls and monitoring systems to detect or block the tunnels, making it an ideal tool for bypassing censorship and ensuring privacy.
+# What is Nebula Tunnel?
 
+Nebula Script is an advanced and automated script for setting up encrypted tunnels and hiding internet traffic. This tool uses Obfs4 to transmit traffic in an obfuscated form so that it cannot be detected by firewalls and filtering systems.
+# Key Features:
+🔐 Obfuscation of traffic with Obfs4: Advanced traffic obfuscation to bypass smart filtering.<br>
+🌐 IPv6 and SIT support: Establish secure tunnels between servers via modern protocols.<br>
+🛠 Automatic creation of network interfaces: The script automatically configures the required interfaces such as sit0 and nebula0.<br>
+📶 IPv4 and NAT support: If needed, an IPv4 tunnel is also created and uses NAT for routing.<br>
+♻️ Full tunnel reset and removal capability: Easy management to install, remove or completely reset the tunnel settings.<br>
+📦 No dependency on a specific client: Traffic from any type of tool or service can be passed through the tunnel.<br>
 # Installation Script
 To install, simply run the following command on your server
 ```
