@@ -107,7 +107,6 @@ nebula_menu() {
     # Get server IP
     SERVER_IP=$(hostname -I | awk '{print $1}')
     # Fetch server country using ip-api.com
-    SERVER_COUNTRY=$(curl -sS "http://ip-api.com/json/$SERVER_IP" | jq -r '.country')
     # Fetch server isp using ip-api.com 
     SERVER_ISP=$(curl -sS "http://ip-api.com/json/$SERVER_IP" | jq -r '.isp')
     nebula_core=$(check_core_status)
@@ -125,7 +124,6 @@ nebula_menu() {
     echo "+--------------------------------------------------------------------------------+"      
     echo -e "|         Telegram Channel Sponsor  : ${GREEN}VNodePro ${NC} "
     echo "+--------------------------------------------------------------------------------+"
-    echo -e "|${GREEN}Server Country    |${NC} $SERVER_COUNTRY"
     echo -e "|${GREEN}Server IP         |${NC} $SERVER_IP"
     echo -e "|${GREEN}Server ISP        |${NC} $SERVER_ISP"
     echo -e "|${GREEN}Server Tunnel     |${NC} $nebula_core"
